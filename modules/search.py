@@ -1,6 +1,6 @@
 from googlesearch import search
 import time
-import colorama
+import colorama, os
 from colorama import init, Fore
 init()
 
@@ -28,7 +28,7 @@ def dorker(dork, count):
         
         print (f" {PURPLE}[ {GREEN}$ {PURPLE}]{RESET}", counter, results.split('/')[2])
         
-        time.sleep(0.3)
+        #time.sleep(0.3)
         requ += 1
         if requ >= int(count):
             break
@@ -40,4 +40,6 @@ def dorker(dork, count):
     f.close()
     u.close()
     print(f"{PURPLE} [ {GREEN}$ {PURPLE}] {RESET}saved results to {GREEN}{filename}")
+
         
+    

