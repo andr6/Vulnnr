@@ -20,6 +20,6 @@ python3 Vulnnr.py
 
 ## Credits
 ```json
-Credits to Nano => Creator
-Credits to VulnX Github Project, used CMS detector
+Nano - Creator
+VulnX Github - CMS detector
 ```
