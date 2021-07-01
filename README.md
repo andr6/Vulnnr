@@ -8,7 +8,6 @@
 </p>
 
 
-<p align="middle"><img src="https://pays.host/uploads/8ecc5016-9448-40c0-96c9-8acdc1303f29/wnYwjeQY.gif"> </img>
 <hr>
 
 ## Install
