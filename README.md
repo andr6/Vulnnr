@@ -10,6 +10,7 @@
 
 <hr>
 
+
 ## Install
 ```json
 git clone https://github.com/X-x-X-0/Vulnnr.git
@@ -22,3 +23,7 @@ python3 Vulnnr.py
 Nano - Creator
 VulnX Github - CMS detector
 ```
+
+## Discontinued
+* after long thought, the project will stop updating. i will create better pentesting tools in the future.
+* i put alot of hardwork in the project but i wanna strive to do better.
