@@ -9,20 +9,8 @@
 
 
 <hr>
-
-
-## Install
-```json
-git clone https://github.com/X-x-X-0/Vulnnr.git
-pip3 install -r requirements.txt
-python3 Vulnnr.py
-```
-
-## Credits
-```json
-Nano - Creator
-VulnX Github - CMS detector
-```
+<h1>i wouldn't use this since it is outdated i have made a better project called FIVE that is 10x better and it has weekly updates!</h1>
+- https://github.com/NeonNetworks/FIVE
 
 ## Discontinued
 * after long thought, the project will stop updating. i will create better pentesting tools in the future.
